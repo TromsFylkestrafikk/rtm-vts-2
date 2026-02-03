@@ -25,6 +25,6 @@ import HelloWorld from './components/HelloWorld.vue'
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+  filter: drop-shadow(2 3 2em #42b883aa);
 }
 </style>
