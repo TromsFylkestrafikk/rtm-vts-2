@@ -1,0 +1,12 @@
+{% extends 'map.html' %}
+{% load static %}
+
+{% block title %}Trip Planner{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'map/css/trip.css' %}">
+{% endblock %}
+
+{% block content %}
+<script src="{% static 'map/js/map-trip.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MapLibre with Custom Tile Server{% endblock %}</title>
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css">
+    <script src="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'map/css/map.css' %}">
+    <link rel="stylesheet" href="{% static 'map/css/trip.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div id="county-selector">
+        <select id="county-dropdown">
+            <option value="">Select County</option>
+        </select>
+        <select id="situation-dropdown">
+            <option value="">All Situation Types</option>
+        </select>
+        <select id="severity-dropdown">
+            <option value="">All Severities</option>
+        </select>
+        <button id="toggle-collisions-btn" class="btn-toggle-collisions">Show Collisions</button>
+    </div>
+
+    <div id="sidebar">
+        <div class="section-header transit-header" onclick="toggleSection('transit-content')">
+            <h3>Transit Information</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="transit-content" class="section-content">
+            <ul id="transit-list"></ul>
+        </div>
+        
+        <div class="section-header trip-header" onclick="toggleSection('trip-content')">
+            <h3>Trip Planner</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div id="trip-content" class="section-content">
+            <div id="trip-planner">
+                <form id="trip-search-form" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label for="from">From:</label>
+                        <input type="text" id="from" name="from" required 
+                            value="NSR:StopPlace:1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="to">To:</label>
+                        <input type="text" id="to" name="to" required 
+                            value="NSR:StopPlace:57052">
+                    </div>
+                    <button type="submit" class="btn-search">
+                        Search Trip Route
+                    </button>
+                    <!-- <button id="compareCoordinatesButton">Compare Trip and VTS Coordinates</button> -->
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+    {% block content %}{% endblock %}
+    
+    <!-- Custom JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf"></script>
+    <script src="{% static 'map/js/map-config.js' %}"></script>
+    <script src="{% static 'map/js/map-layers.js' %}"></script>
+    <script src="{% static 'map/js/map-filters.js' %}"></script>
+    <script src="{% static 'map/js/map-interactions.js' %}"></script>
+    <script src="{% static 'map/js/sidebar-toggle.js' %}"></script>
+    <script src="{% static 'map/js/map-collisions.js' %}"></script>
+
+    
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
