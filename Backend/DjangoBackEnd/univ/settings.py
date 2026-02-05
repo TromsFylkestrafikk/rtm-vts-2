@@ -97,10 +97,11 @@ def find_library(lib_name, formula_name):
 # Adjust formula_name and lib_name based on what brew installed and what file exists
 SPATIALITE_LIBRARY_PATH = "/opt/homebrew/lib/mod_spatialite.dylib"
 # You likely still need GEOS and PROJ
-GEOS_LIBRARY_PATH = find_library('libgeos_c.dylib', 'geos')
-PROJ_LIBRARY_PATH = find_library('libproj.dylib', 'proj')
-# GDAL is often needed too, even if just checked for by GeoDjango
-GDAL_LIBRARY_PATH = find_library('libgdal.dylib', 'gdal')
+from ctypes.util import find_library
+
+GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", "")
+GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", "")
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
