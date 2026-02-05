@@ -1,11 +1,14 @@
 <template>
-<mgl-map map-style="https://victor.tftservice.no/tiles/nordic" />
+  <mgl-map
+    map-style="/rtm-dark.json"
+    style="width:100vw; height:100vh"
+  />
 </template>
 
 <script setup lang="ts">
-    import { MglMap } from '@indoorequal/vue-maplibre-gl';
+import { MglMap } from '@indoorequal/vue-maplibre-gl'
 </script>
 
-<style lang="css">
-  @import "maplibre-gl/dist/maplibre-gl.css";
+<style>
+@import "maplibre-gl/dist/maplibre-gl.css";
 </style>
