@@ -95,7 +95,7 @@ function addAllLayers(data) {
             'none', '#7e4da3', 
             'low', '#FFFF00', 
             'high', '#FFA500', 
-            'highest', '#FF0000', 
+            'highest', '#ff0000', 
             'unknown', '#808080', 
             '#0000FF'
         ] 
