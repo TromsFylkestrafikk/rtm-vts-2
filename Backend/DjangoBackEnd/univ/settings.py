@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'django.contrib.gis',
+    "corsheaders",   
     "map",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -51,6 +53,14 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8001",
+    "http://127.0.0.1:8001",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 
 ROOT_URLCONF = "univ.urls"
 
@@ -77,25 +87,25 @@ WSGI_APPLICATION = "univ.wsgi.application"
 # Try to find paths automatically using Homebrew standard locations
 homebrew_prefix = os.getenv('HOMEBREW_PREFIX', '') # Get Homebrew prefix if set
 
-def find_library(lib_name, formula_name):
-    paths_to_try = [
-        f'/opt/homebrew/opt/{formula_name}/lib/{lib_name}', # Apple Silicon default
-        f'/usr/local/opt/{formula_name}/lib/{lib_name}',  # Intel default
-    ]
-    if homebrew_prefix:
-         paths_to_try.insert(0, os.path.join(homebrew_prefix, f'opt/{formula_name}/lib/{lib_name}'))
+# def find_library(lib_name, formula_name):
+#     paths_to_try = [
+#         f'/opt/homebrew/opt/{formula_name}/lib/{lib_name}', # Apple Silicon default
+#         f'/usr/local/opt/{formula_name}/lib/{lib_name}',  # Intel default
+#     ]
+#     if homebrew_prefix:
+#          paths_to_try.insert(0, os.path.join(homebrew_prefix, f'opt/{formula_name}/lib/{lib_name}'))
 
-    for path in paths_to_try:
-         if os.path.exists(path):
-            #  print(f"Found {lib_name} at: {path}")
-             return path
-    print(f"WARNING: Could not automatically find {lib_name}. Set manually if needed.")
-    return None
+#     for path in paths_to_try:
+#          if os.path.exists(path):
+#             #  print(f"Found {lib_name} at: {path}")
+#              return path
+#     print(f"WARNING: Could not automatically find {lib_name}. Set manually if needed.")
+#     return None
 
 # IMPORTANT: Django needs the path to the SpatiaLite library itself
 # Check if spatialite-tools provides mod_spatialite.dylib or if libspatialite is separate
 # Adjust formula_name and lib_name based on what brew installed and what file exists
-SPATIALITE_LIBRARY_PATH = "/opt/homebrew/lib/mod_spatialite.dylib"
+#SPATIALITE_LIBRARY_PATH = "/opt/homebrew/lib/mod_spatialite.dylib"
 # You likely still need GEOS and PROJ
 from ctypes.util import find_library
 
