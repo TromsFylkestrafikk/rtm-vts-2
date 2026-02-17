@@ -15,3 +15,4 @@
 
 3) Implement a mechanism to extract the data from vegvesens 
 
+4) Implement a mechanism to establish reconnection in case of a disruption in the connection

@@ -53,11 +53,14 @@
         layer-id="live-bus-layer"
         :paint="liveBusPaint"
       />
+      
     </mgl-geo-json-source>
-
+    
+    <mgl-navigation-control />
+    
   </mgl-map>
 
-  <button @click="$emit('Some event')">Button</button>
+  
 </template>
 
 <script setup lang="ts">
@@ -67,6 +70,8 @@ import {
   MglGeoJsonSource,
   MglLineLayer,
   MglCircleLayer,
+  MglNavigationControl,
+  MglImage,
 } from '@indoorequal/vue-maplibre-gl'
 
 /* ================= GEOJSON STATE ================= */
@@ -126,15 +131,15 @@ const liveBusPaint = {
 /* ================= DATA FETCH ================= */
 
 onMounted(async () => {
-  busRoutes.value = await fetchJSON('/api/busroute/')
-  incidents.value = await fetchJSON('/api/location_geojson/')
-  collisions.value = await fetchJSON('/api/stored_collisions/')
-  liveBuses.value = await fetchJSON('/api/serve_bus/')
+  //busRoutes.value = await fetchJSON('/api/busroute/')
+  //incidents.value = await fetchJSON('/api/location_geojson/')
+  //collisions.value = await fetchJSON('/api/stored_collisions/')
+  //liveBuses.value = await fetchJSON('/api/serve_bus/')
 })
 
 async function fetchJSON(path: string) {
   const res = await fetch(`http://127.0.0.1:8000${path}`)
-  return res.ok ? res.json() : emptyFC()
+  return res.ok ? res.json() : emptyFC() //Returns json package if the result is ok (aka. status code 200 )
 }
 
 
