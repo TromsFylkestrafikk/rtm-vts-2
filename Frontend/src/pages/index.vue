@@ -139,7 +139,6 @@ async function fetchJSON(path: string) {
 /* ---------------- MQTT PART ---------------- */
 
 import mqtt from 'mqtt'
-import { onMounted } from 'vue'
 
 let client: any
 
