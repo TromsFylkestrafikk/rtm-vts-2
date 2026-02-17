@@ -32,17 +32,6 @@
         layer-id="stored-collisions-layer"
         :paint="collisionPaint"
       />
-    </mgl-geo-json-source>
-
-    <!-- ================= LIVE BUS POSITIONS ================= -->
-    <mgl-geo-json-source
-      source-id="live-bus-source"
-      :data="liveBuses"
-    >
-      <mgl-circle-layer
-        layer-id="live-bus-layer"
-        :paint="liveBusPaint"
-      />
       
     </mgl-geo-json-source>
     
@@ -109,7 +98,7 @@ const collisionPaint = {
 /* ================= DATA FETCH ================= */
 
 onMounted(async () => {
-  busRoutes.value = await fetchJSON('/api/busroute/')
+  //busRoutes.value = await fetchJSON('/api/busroute/')
   incidents.value = await fetchJSON('/api/location_geojson/')
   collisions.value = await fetchJSON('/api/stored_collisions/')
   //liveBuses.value = await fetchJSON('/api/serve_bus/')
@@ -137,6 +126,7 @@ onMounted(() => {
       if (!err) {
         console.log('Subscribed to collisions')
       }
+      
     })
   })
 
@@ -146,9 +136,7 @@ onMounted(() => {
       console.log('Topic:', topic)
       console.log('Payload:', message.toString())  
     }
-    else { 
-      //alert("Error. Can't connect to MQTT")
-    }
+
     
   })
 })
