@@ -1,3 +1,7 @@
+
+![image of the diagram](Diagram.jpg)
+
+---------
 ## TODO
 
 1) Information button 
@@ -8,4 +12,6 @@
 2) Traffic situations
 - need a unique icon for each traffic situation
 - Need to display relavent information about the situation upon clicking the icon. (i.e description of the situation, the route, the name of the situation, current status)
+
+3) Implement a mechanism to extract the data from vegvesens 
 

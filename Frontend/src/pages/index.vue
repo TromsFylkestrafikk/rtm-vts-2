@@ -56,6 +56,8 @@
     </mgl-geo-json-source>
 
   </mgl-map>
+
+  <button @click="$emit('Some event')">Button</button>
 </template>
 
 <script setup lang="ts">
