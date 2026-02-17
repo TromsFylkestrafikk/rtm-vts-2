@@ -4,16 +4,6 @@
     style="width: 100vw; height: 100vh"
   >
 
-    <!-- ================= BUS ROUTES ================= -->
-    <mgl-geo-json-source
-      source-id="bus-routes-source"
-      :data="busRoutes"
-    >
-      <mgl-line-layer
-        layer-id="bus-routes-layer"
-        :paint="busRoutePaint"
-      />
-    </mgl-geo-json-source>
 
     <!-- ================= INCIDENTS ================= -->
     <mgl-geo-json-source
@@ -81,7 +71,7 @@ const emptyFC = () => ({ type: 'FeatureCollection', features: [] })
 const busRoutes  = ref(emptyFC())
 const incidents  = ref(emptyFC())
 const collisions = ref(emptyFC())
-const liveBuses  = ref(emptyFC())
+//const liveBuses  = ref(emptyFC())
 
 /* ================= STYLES ================= */
 
@@ -95,11 +85,6 @@ const severityColor = [
   'unknown', '#808080',
   '#0000ff',
 ]
-
-const busRoutePaint = {
-  'line-color': '#00ffff',
-  'line-width': 3,
-}
 
 const incidentCirclePaint = {
   'circle-radius': 6,
@@ -121,19 +106,12 @@ const collisionPaint = {
   'circle-stroke-width': 1,
 }
 
-const liveBusPaint = {
-  'circle-radius': 5,
-  'circle-color': '#00ff00',
-  'circle-stroke-color': '#000000',
-  'circle-stroke-width': 1,
-}
-
 /* ================= DATA FETCH ================= */
 
 onMounted(async () => {
-  //busRoutes.value = await fetchJSON('/api/busroute/')
-  //incidents.value = await fetchJSON('/api/location_geojson/')
-  //collisions.value = await fetchJSON('/api/stored_collisions/')
+  busRoutes.value = await fetchJSON('/api/busroute/')
+  incidents.value = await fetchJSON('/api/location_geojson/')
+  collisions.value = await fetchJSON('/api/stored_collisions/')
   //liveBuses.value = await fetchJSON('/api/serve_bus/')
 })
 
@@ -162,10 +140,16 @@ onMounted(() => {
     })
   })
 
-  client.on('message', (topic: string, message: Buffer) => {
-    console.log('MQTT message received:')
-    console.log('Topic:', topic)
-    console.log('Payload:', message.toString())
+  client.on('message', (topic: string, message: Buffer, err: any) => {
+    if(!err) {
+      console.log('MQTT message received:')
+      console.log('Topic:', topic)
+      console.log('Payload:', message.toString())  
+    }
+    else { 
+      //alert("Error. Can't connect to MQTT")
+    }
+    
   })
 })
 
