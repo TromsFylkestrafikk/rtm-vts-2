@@ -1,46 +1,52 @@
 <template>
-  <mgl-map
-    map-style="/rtm-dark.json"
-    style="width: 100vw; height: 100vh"
-  >
+  <div class="map-wrapper">
 
-
-    <!-- ================= INCIDENTS ================= -->
-    <mgl-geo-json-source
-      source-id="incidents-source"
-      :data="incidents"
+    <mgl-map
+      map-style="/rtm-dark.json"
+      class="map"
     >
-      <mgl-circle-layer
-        layer-id="incidents-points-layer"
-        :paint="incidentCirclePaint"
-        :filter="['==', '$type', 'Point']"
-      />
 
-      <mgl-line-layer
-        layer-id="incidents-lines-layer"
-        :paint="incidentLinePaint"
-        :filter="['==', '$type', 'LineString']"
-      />
-    </mgl-geo-json-source>
+      <!-- ================= INCIDENTS ================= -->
+      <mgl-geo-json-source
+        source-id="incidents-source"
+        :data="incidents"
+      >
+        <mgl-circle-layer
+          layer-id="incidents-points-layer"
+          :paint="incidentCirclePaint"
+          :filter="['==', '$type', 'Point']"
+        />
 
-    <!-- ================= COLLISIONS ================= -->
-    <mgl-geo-json-source
-      source-id="stored-collisions-source"
-      :data="collisions"
-    >
-      <mgl-circle-layer
-        layer-id="stored-collisions-layer"
-        :paint="collisionPaint"
-      />
-      
-    </mgl-geo-json-source>
-    
-    <mgl-navigation-control />
-    
-  </mgl-map>
+        <mgl-line-layer
+          layer-id="incidents-lines-layer"
+          :paint="incidentLinePaint"
+          :filter="['==', '$type', 'LineString']"
+        />
+      </mgl-geo-json-source>
 
-  
+      <!-- ================= COLLISIONS ================= -->
+      <mgl-geo-json-source
+        source-id="stored-collisions-source"
+        :data="collisions"
+      >
+        <mgl-circle-layer
+          layer-id="stored-collisions-layer"
+          :paint="collisionPaint"
+        />
+      </mgl-geo-json-source>
+
+      <mgl-navigation-control />
+
+    </mgl-map>
+
+    <!-- 🔵 USELESS BUTTON -->
+    <button class="map-button">
+      Click Me (Does Nothing)
+    </button>
+
+  </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
