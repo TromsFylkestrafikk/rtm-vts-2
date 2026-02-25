@@ -13,8 +13,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    Map: typeof import('./components/map.vue')['default']
     MapView: typeof import('./components/MapView.vue')['default']
+    MsgWindow: typeof import('./components/msgWindow.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TrafficBtn: typeof import('./components/trafficBtn.vue')['default']
   }
 }

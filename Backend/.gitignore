@@ -1,0 +1,51 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Byte-compiled and Cache Files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyc
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Logs and Debugging
+*.log
+logs/
+debug.log
+
+# OS-specific Files
+.DS_Store
+Thumbs.db
+
+# Editor and IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing & Coverage
+.coverage
+.tox/
+pytest_cache/
+
+# Build and Distribution
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Dependency Lock Files
+Pipfile.lock
+poetry.lock
+# SQLite Database
+db.sqlite3
+DjangoBackEnd/db.sqlite3
