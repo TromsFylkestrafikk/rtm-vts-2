@@ -31,10 +31,16 @@ onMounted(() => {
 
   client.on("message", (topic: string, message: Buffer, err: any) => {
     
+    if(!err) { 
       console.log('MQTT message received:')
       console.log('Topic:', topic)
       console.log('Payload:', message.toString())  
     
+    }
+
+    else if(err) {
+      console.log("Could not get the messsage:",err)
+    } 
   })
 })
 </script>
