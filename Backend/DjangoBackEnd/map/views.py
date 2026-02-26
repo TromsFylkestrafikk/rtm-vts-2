@@ -25,6 +25,8 @@ def serve_geojson(request):
         return JsonResponse({"error": "GeoJSON file not found"}, status=404)
 
 
+
+
 def serve_bus(request):
     '''
     the updated bus list is served here

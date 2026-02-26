@@ -5,13 +5,14 @@
     
     <mgl-navigation-control />
     
-    <trafficBtn />
+    <trafficBtn @toggle="showIncidents = !showIncidents" />
 
     <!-- ================= INCIDENTS ================= -->
     <mgl-geo-json-source
-        source-id="incidents-source"
-        :data="incidents"
-      >
+      v-if="showIncidents"
+      source-id="incidents-source"
+      :data="incidents"
+    >
 
       
         <mgl-circle-layer
@@ -35,12 +36,16 @@
         />
       </mgl-geo-json-source>
 
-      <v-container > 
-        <msgWindow />
-      </v-container>
-    
+
+
       
     </mgl-map>
+
+    <msgWindow
+      v-if="selectedFeature"
+      :data="selectedFeature"
+      @close="selectedFeature = null"
+    />
 
 </template>
   
@@ -53,7 +58,10 @@
     MglCircleLayer,
     MglNavigationControl,
   } from '@indoorequal/vue-maplibre-gl'
-  
+
+  const selectedFeature = ref<any>(null)
+  const popupCoordinates = ref<[number, number] | null>(null)
+  const showIncidents = ref(false)
   
   import trafficBtn from "@/components/trafficBtn.vue"
   import msgWindow from "@/components/msgWindow.vue"
@@ -116,9 +124,15 @@ async function fetchJSON(path: string) {
   return res.ok ? res.json() : emptyFC() //Returns json package if the result is ok (aka. status code 200 )
 }
 
-  function test() { 
-    console.log("test:")
+  function test(e: any) {
+    const feature = e.features?.[0]
+    if (!feature) return
+
+    selectedFeature.value = feature.properties
+    popupCoordinates.value = feature.geometry.coordinates
   }
+
+  
   </script>
   
   <style>

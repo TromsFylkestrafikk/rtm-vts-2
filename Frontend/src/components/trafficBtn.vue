@@ -1,26 +1,19 @@
-<script setup lang="ts"> 
-//
-import {
-  MglMarker, 
-  MglPopup
-} from '@indoorequal/vue-maplibre-gl'
+<script setup lang="ts">
+const emit = defineEmits(['toggle'])
 
-import {trafficIcon} from "@/components/trafficIcon.vue"
-
-
-function togglePopup() { 
-    
+function toggleLayer() {
+  emit('toggle')
 }
-
-
 </script>
 
-<template> 
-
-  <v-btn class = "iconBtn" color = "warning" icon="mdi-plus" size ="x-small" v-on:click ="">
-    
-  </v-btn>
-  
+<template>
+  <v-btn
+    class="iconBtn"
+    color="warning"
+    icon="mdi-alert"
+    size="x-small"
+    @click="toggleLayer"
+  />
 </template>
 
 
