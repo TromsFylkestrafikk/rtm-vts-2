@@ -555,3 +555,47 @@ def get_stored_collisions_view(request):
 
     # Return the data. The key "stored_collisions" clearly indicates the source.
     return JsonResponse({"stored_collisions": collision_data})
+
+
+
+async def get_bus_routes(): 
+    # Select your transport with a defined url endpoint
+    transport = AIOHTTPTransport(url="https://api.entur.io/journey-planner/v3/graphql", headers={
+        "ET-Client-Name": "uit-studentproject-mapping-2026", # Required by Entur
+        "Content-Type": "application/json",},)
+
+    # Create a GraphQL client using the defined transport
+    client = Client(transport=transport, fetch_schema_from_transport=True)
+
+    # Provide a GraphQL query
+    query = gql(
+        """
+        query GetBusRoutes($id: ID!){
+            line(id: $id) {
+                journeyPatterns {
+                    pointsOnLink {
+                        points
+                    }
+                }
+            }
+        }
+        """
+    )
+    
+    params = {"id": "TRO:Line:1_42"}
+
+    # Using `async with` on the client will start a connection on the transport
+    # and provide a `session` variable to execute queries on this connection
+    async with client as session:
+        
+        try: 
+            # Execute the query
+            result = await session.execute(query, variable_values = params)
+            
+            with open("test.txt", "w") as f:
+                f.write(str(result))
+                
+        except Exception as e:
+            print(f"the line: TRO:Line:1_42 and the error: {e}")
+   
+asyncio.run(get_bus_routes())
