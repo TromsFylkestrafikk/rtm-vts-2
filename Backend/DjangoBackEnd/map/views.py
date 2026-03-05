@@ -13,6 +13,8 @@ from django.contrib.gis.db.models.functions import Transform, Distance
 from django.db.models import OuterRef, Exists
 from django.db.models import Q
 from django.db import connection
+from gql import Client, gql
+from gql.transport.aiohttp import AIOHTTPTransport
 
 def serve_geojson(request):
     """Serve the pre-generated GeoJSON file instead of querying the database."""
