@@ -13,6 +13,7 @@ from django.contrib.gis.db.models.functions import Transform, Distance
 from django.db.models import OuterRef, Exists
 from django.db.models import Q
 from django.db import connection
+import asyncio
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
