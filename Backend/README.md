@@ -125,7 +125,7 @@ python manage.py fetch_vts_situations
 ```
 Calculate Initial Collisions:
 ```Bash
-python manage.py update_collisions
+python manage.py calculate_and_store_collisions
 ```
 
 ## Running the Application
