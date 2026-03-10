@@ -14,6 +14,7 @@ from django.db.models import OuterRef, Exists
 from django.db.models import Q
 from django.db import connection
 import asyncio
+import polyline
 from gql import Client, gql
 from gql.transport.aiohttp import AIOHTTPTransport
 
@@ -49,9 +50,12 @@ def busroute_json(request):
     '''
     route_path = os.path.join(settings.BASE_DIR,"route_coordinates.geojson")
     print(f"bus list path: {route_path}")
+    
     if os.path.exists(route_path):
+        
         with open(route_path,'r') as file:
             route_data = json.load(file)
+            
         return JsonResponse(route_data,safe=False)
     else:
         return JsonResponse({"error": "buslist file not found"},status = 404)
@@ -64,7 +68,7 @@ def busroute(request):
         # Query all BusRoute objects from the database
         # Use .iterator() for potentially large datasets to reduce memory usage
         routes = BusRoute.objects.all().iterator()
-
+        
         # Prepare the list of GeoJSON features
         features = []
         for route in routes:
@@ -93,8 +97,10 @@ def busroute(request):
                         # "database_id": route.pk,
                     },
                     # Use the database primary key as the feature ID
-                    "id": route.pk
+                    "id ": route.pk
                 }
+                
+                print(route.pk)
                 features.append(feature)
             else:
                 # Log or print a warning if a route has no path data
@@ -531,74 +537,5 @@ def find_all_collisions_details(distance_meters=20):
         # import traceback
         # traceback.print_exc()
         return [] # Return empty list on error
-def get_stored_collisions_view(request):
-    """
-    API endpoint to retrieve pre-calculated and stored collision data
-    from the DetectedCollision table.
-    Supports optional filtering by detection timestamp.
-    """
-    # Optional: Filter by tolerance if multiple tolerances are stored
-    # tolerance_filter = request.GET.get('tolerance', None)
 
-    # Start querying the storage model
-    queryset = DetectedCollision.objects.all()
-
-
-    # Select only the fields needed for the API response using values() for efficiency
-    # Note: Django automatically gives you the foreign key ID when you access
-    # the ForeignKey field name in .values()
-    collision_data = list(queryset.values(
-        'transit_information_id', # Gets the ID of the related VtsSituation object
-        'bus_route_id',           # Gets the ID of the related BusRoute object
-        'transit_lon',
-        'transit_lat',
-        'detection_timestamp',
-        'tolerance_meters'
-    ))
-
-    # Return the data. The key "stored_collisions" clearly indicates the source.
-    return JsonResponse({"stored_collisions": collision_data})
-
-
-
-async def get_bus_routes(): 
-    # Select your transport with a defined url endpoint
-    transport = AIOHTTPTransport(url="https://api.entur.io/journey-planner/v3/graphql", headers={
-        "ET-Client-Name": "uit-studentproject-mapping-2026", # Required by Entur
-        "Content-Type": "application/json",},)
-
-    # Create a GraphQL client using the defined transport
-    client = Client(transport=transport, fetch_schema_from_transport=True)
-
-    # Provide a GraphQL query
-    query = gql(
-        """
-        query GetBusRoutes($id: ID!){
-            line(id: $id) {
-                journeyPatterns {
-                    pointsOnLink {
-                        points
-                    }
-                }
-            }
-        }
-        """
-    )
     
-    params = {"id": "TRO:Line:1_42"}
-
-    # Using `async with` on the client will start a connection on the transport
-    # and provide a `session` variable to execute queries on this connection
-    async with client as session:
-        
-        try: 
-            # Execute the query
-            result = await session.execute(query, variable_values = params)
-            
-            with open("test.txt", "w") as f:
-                f.write(str(result))
-                
-        except Exception as e:
-            print(f"the line: TRO:Line:1_42 and the error: {e}")
-   
-asyncio.run(get_bus_routes())
