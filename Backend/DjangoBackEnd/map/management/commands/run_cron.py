@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
         commands_to_run = [
             {'name': 'fetch_vts_situations', 'args': {}},
-            {'name': 'calculate_and_store_collisions', 'args': {'no_clear': True}}, # Pass --no-clear as True
+            {'name': 'calculate_and_store_collisions', 'args': {'no_clear': False}}, # Pass --no-clear as True
             {'name': 'publish_new_collisions', 'args': {}},
         ]
 

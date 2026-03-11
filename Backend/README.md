@@ -110,19 +110,23 @@ Initial Data Population
 Run these commands to populate the database with initial data:
 Import Bus Routes: (Requires the source GeoJSON file)
 
+*Send a request to Entur's API for coordinates of every bus line. The data are stored in map_busroute table*
 ```Bash
 python manage.py fetch-coordinates
 ```
-
+*importing the data from the geoJSON file to database. (--file flag might not be necessary)*
 ```Bash
 python manage.py import_bus_routes --file data/route_coordinates.geojson
 ```
 (Adjust the command and file path as necessary)
 
+*Sending request to VTS API, process the response (XML to geoJSON) and store the results in map_vtssituation table*
 Fetch Initial VTS Situations:
 ```Bash
 python manage.py fetch_vts_situations
 ```
+
+*Calulates collisions based on coordinates from the vts and bus routes. The results are stored int the map_detectedcollision table*
 Calculate Initial Collisions:
 ```Bash
 python manage.py calculate_and_store_collisions
@@ -139,16 +143,29 @@ Access the web interface at http://127.0.0.1:8000/.
 The publish_new_collisions command needs to run periodically (e.g., every 5 minutes) to send updates via MQTT. This does not run automatically with runserver.
 
 For Development: You can run it manually in a separate terminal (ensure your virtual environment is activated):
+
 ```Bash
 python manage.py run_cron
 ```
+
+This command does: 
+1. Fetches VTS situations.
+2. Calculates collisions (**without clearing previous ones**).
+3. Publishes new collisions via MQTT.
+
+To enable clearing. Check run_cron.py:21. 
+
 For Production/Continuous Operation: Schedule this command using cron (Linux/macOS), systemd timers (Linux).
 
 Example Cron Job (Linux/macOS):
 
-Edit crontab: crontab -e
-Run publish command every 5 minutes, log output
+* Edit crontab: crontab -e
+
+```Bash
 */5 * * * * /path/to/your/project/.venv/bin/python /path/to/your/project/manage.py run_cron >> /path/to/your/project/logs/publish_collisions.log 2>&1
+```
+
+Run publish command every 5 minutes, log output to *publish_collisions.log*
 
 ### Key Components Models (map/models.py)
 * **VtsSituation:** Stores road situation data fetched from the VTS DATEX II API.
@@ -156,13 +173,13 @@ Run publish command every 5 minutes, log output
 * **DetectedCollision:** Stores calculated collision instances between VtsSituation and BusRoute, including MQTT publishing status.
 * **ApiMetadata:** Stores general metadata (e.g., last VTS fetch time).
 ### Management Commands (map/management/commands/)
-* **fetch_vts_situations.py:** Fetches data from VTS API and saves to VtsSituation.
-* **import_bus_routes.py:** Imports routes from GeoJSON into BusRoute.
+* **fetch_vts_situations.py:** Fetches data from VTS API and saves to VtsSituation table.
+* **import_bus_routes.py:** Imports routes from GeoJSON into BusRoute table in db.sqlite3.
 * **calculate_and_store_collisions.py:** Calculates and saves/updates DetectedCollision records. Use --no-clear to avoid deleting existing collisions.
 * **publish_new_collisions.py:** Checks for unpublished collisions and sends them via MQTT. Needs to be run periodically.
 * **purge_transitinformation.py** (or similar name): Deletes data from VtsSituation.
 * **fetch_entur_trips.py:** Fetches trip data from Entur.
-* **fetch_coordinates.py:** Fetches bus route coordinates.
+* **fetch_coordinates.py:** Fetches bus route coordinates. 
 
 ### MQTT Publishing
 * Broker: Connects to the broker defined in .env.

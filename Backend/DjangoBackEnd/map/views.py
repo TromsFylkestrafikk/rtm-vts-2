@@ -537,5 +537,31 @@ def find_all_collisions_details(distance_meters=20):
         # import traceback
         # traceback.print_exc()
         return [] # Return empty list on error
-
     
+def get_stored_collisions_view(request):
+    """
+    API endpoint to retrieve pre-calculated and stored collision data
+    from the DetectedCollision table.
+    Supports optional filtering by detection timestamp.
+    """
+    # Optional: Filter by tolerance if multiple tolerances are stored
+    # tolerance_filter = request.GET.get('tolerance', None)
+
+    # Start querying the storage model
+    queryset = DetectedCollision.objects.all()
+
+
+    # Select only the fields needed for the API response using values() for efficiency
+    # Note: Django automatically gives you the foreign key ID when you access
+    # the ForeignKey field name in .values()
+    collision_data = list(queryset.values(
+        'transit_information_id', # Gets the ID of the related VtsSituation object
+        'bus_route_id',           # Gets the ID of the related BusRoute object
+        'transit_lon',
+        'transit_lat',
+        'detection_timestamp',
+        'tolerance_meters'
+    ))
+
+    # Return the data. The key "stored_collisions" clearly indicates the source.
+    return JsonResponse({"stored_collisions": collision_data})

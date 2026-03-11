@@ -19,7 +19,8 @@ class Command(BaseCommand):
         headers = {
             "ET-Client-Name": "troms-fylkeskommune-studenter",
         }
-
+        
+        #graphQL query for all traffic lines in Troms
         route_query = gql("""
         query {
             lines(authorities: "TRO:Authority:1") {
@@ -43,7 +44,6 @@ class Command(BaseCommand):
             "features": []
         }
         
-        #print(result["lines"][0])
         if "lines" in result and result["lines"] :
             for route_data in result["lines"]:
                 
@@ -58,8 +58,7 @@ class Command(BaseCommand):
                     match = re.search(r"_(\d+)", route_data.get("id", ""))
                     
                     if match:
-                        trimmed_id = match.group(0)[1:]  # Get the part after ':' and before '_'
-                        #print(trimmed_id)
+                        trimmed_id = match.group(0)[1:]  # Get the part after ':' and '_' (e.g 1_263)
                         
                         # Create a feature for the bus route
                         feature = {
@@ -69,7 +68,9 @@ class Command(BaseCommand):
                                 "coordinates": [[lon, lat] for lat, lon in decoded_coordinates]  # Ensure [longitude, latitude] order
                             },
                             "properties": {
-                                "route_id": trimmed_id  # Add the trimmed ID to the properties
+                                # Add the trimmed ID to the properties
+                                # These are the bus lines 
+                                "route_id": trimmed_id  
                             }
                         }
 
