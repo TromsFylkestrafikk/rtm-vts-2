@@ -128,7 +128,7 @@ onMounted(() => {
   client.on('connect', () => {
     console.log('Connected to MQTT broker')
 
-    client.subscribe('vts/collisions/#', (err: any) => {
+    client.subscribe('vts/collisions/route/34/', (err: any) => {
       if (!err) {
         console.log('Subscribed to collisions')
       }
