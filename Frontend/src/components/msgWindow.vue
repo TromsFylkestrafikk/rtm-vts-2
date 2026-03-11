@@ -43,6 +43,11 @@ const emit = defineEmits(['close'])
         </div>
 
         <div class="row">
+          <span class="label">Bus</span>
+          <span>{{ props.data?.affected_routes }}</span>
+        </div>
+
+        <div class="row">
           <span class="label">Alvorlighet</span>
           <span :class="severityClass">
             {{ props.data?.severity }}

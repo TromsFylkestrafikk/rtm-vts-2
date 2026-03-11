@@ -7,6 +7,22 @@
     
     <trafficBtn @toggle="showIncidents = !showIncidents" />
 
+    <mgl-geo-json-source
+      source-id="bus-routes-source"
+      :data="busRoutes"
+    >
+      <mgl-line-layer
+        layer-id="bus-routes-layer"
+        :paint="{
+          'line-color': '#ffffff',
+          'line-width': 4
+        }"
+      />
+    </mgl-geo-json-source>
+
+
+    
+
     <!-- ================= INCIDENTS ================= -->
     <mgl-geo-json-source
       v-if="showIncidents"
@@ -112,7 +128,7 @@ const collisionPaint = {
 /* ================= DATA FETCH ================= */
 
 onMounted(async () => {
-  //busRoutes.value = await fetchJSON('/api/busroute/')
+  busRoutes.value = await fetchJSON('/api/busroute/')
   incidents.value = await fetchJSON('/api/location_geojson/')
   //collisions.value = await fetchJSON('/api/stored_collisions/')
   //liveBuses.value = await fetchJSON('/api/serve_bus/')

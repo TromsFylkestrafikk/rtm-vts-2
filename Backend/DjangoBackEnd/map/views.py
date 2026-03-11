@@ -97,7 +97,7 @@ def busroute(request):
                         # "database_id": route.pk,
                     },
                     # Use the database primary key as the feature ID
-                    "id ": route.pk
+                    "id": route.pk
                 }
                 
                 print(route.pk)
@@ -308,16 +308,22 @@ def location_geojson(request):
     features = []
     # Process each record returned by the optimized query
     for loc_data in locations_data:
+
+        collisions = DetectedCollision.objects.filter(
+            transit_information_id=loc_data.get("id")
+        ).values_list("bus_route_id", flat=True)
+
+        affected_routes = list(collisions)
         # Define base properties (common to point/line from same record)
         properties = {
-            # Use .get() for safer access, though .values() should include them
             "id": loc_data.get('id'),
-            "name": loc_data.get('road_number', 'N/A'), # Provide default
+            "name": loc_data.get('road_number', 'N/A'),
             "description": loc_data.get('location_description', 'No description'),
             "severity": loc_data.get('severity', 'unknown'),
             "comment": loc_data.get('comment', ''),
             "county": loc_data.get('area_name', 'N/A'),
-            "situation_type": loc_data.get('filter_used', 'Unknown')
+            "situation_type": loc_data.get('filter_used', 'Unknown'),
+            "affected_routes": affected_routes
         }
 
         # Attempt to create a Point feature if location_geojson exists
