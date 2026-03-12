@@ -188,7 +188,7 @@ Run publish command every 5 minutes, log output to *publish_collisions.log*
 
 {MQTT_BASE_COLLISION_TOPIC}/route/{bus_route_id}/severity/{severity}/filter/{filter_used}
 
-(e.g., vts/collisions/route/123/severity/high/filter/accident) OR 
+(e.g.,  /123/severity/high/filter/accident) OR 
 (e.g., vts/collisions/+/123/severity/+/filter/+)
 * Payload: JSON containing details of the collision (IDs, location, timestamp, etc.).
 

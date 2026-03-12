@@ -53,8 +53,6 @@
       </mgl-geo-json-source>
 
 
-
-      
     </mgl-map>
 
     <msgWindow
@@ -78,6 +76,8 @@
   const selectedFeature = ref<any>(null)
   const popupCoordinates = ref<[number, number] | null>(null)
   const showIncidents = ref(false)
+
+  defineProps(['coordinates'])
   
   import trafficBtn from "@/components/trafficBtn.vue"
   import msgWindow from "@/components/msgWindow.vue"
@@ -87,9 +87,9 @@
 
 const emptyFC = () => ({ type: 'FeatureCollection', features: [] })
 
-const busRoutes  = ref(emptyFC())
+//const busRoutes  = ref(emptyFC())
 const incidents  = ref(emptyFC())
-const collisions = ref(emptyFC())
+//const collisions = ref(emptyFC())
 //const liveBuses  = ref(emptyFC())
 
 /* ================= STYLES ================= */
@@ -148,7 +148,6 @@ async function fetchJSON(path: string) {
     popupCoordinates.value = feature.geometry.coordinates
   }
 
-  
   </script>
   
   <style>

@@ -21,7 +21,7 @@ onMounted(() => {
   client.on('connect', () => {
     console.log('Connected to MQTT broker')
 
-    client.subscribe('vts/collisions/#', (err: any) => {
+    client.subscribe('vts/collisions/route/+/severity/+/filter/+', (err: any) => {
       if (!err) {
         console.log('Subscribed to collisions')
       }
@@ -29,18 +29,19 @@ onMounted(() => {
     })
   })
 
-  client.on("message", (topic: string, message: Buffer, err: any) => {
+  client.on("message", (topic: string, message: Buffer) => {
     
-    if(!err) { 
+    try { 
       console.log('MQTT message received:')
       console.log('Topic:', topic)
       console.log('Payload:', message.toString())  
     
     }
 
-    else if(err) {
-      console.log("Could not get the messsage:",err)
-    } 
+    catch(e) {
+      console.error("Failed to parse MQTT package")
+    }
+    
   })
 })
 </script>

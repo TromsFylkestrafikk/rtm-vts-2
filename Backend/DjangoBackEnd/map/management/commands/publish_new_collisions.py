@@ -14,7 +14,7 @@ import logging
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import transaction
-from map.models import DetectedCollision # Assuming your model is in the 'map' app
+from map.models import DetectedCollision, BusRoute # Assuming your model is in the 'map' app
 
 try:
     import paho.mqtt.client as mqtt
@@ -83,7 +83,7 @@ class Command(BaseCommand):
         """
         start_time = time.time()
         self.stdout.write("Starting MQTT collision publisher...")
-
+        
         # --- Prerequisite Checks ---
         if not mqtt_available:
             self.stderr.write(self.style.ERROR(
@@ -122,11 +122,14 @@ class Command(BaseCommand):
             ).order_by('detection_timestamp') # Process oldest first for chronological order
 
             processed_count = collisions_to_publish.count()
+            
+            """
             if not collisions_to_publish:
                 self.stdout.write(self.style.SUCCESS("No new collisions found to publish."))
                 # No need to connect to MQTT if there's nothing to send
                 return
-
+            """    
+            
             self.stdout.write(f"Found {processed_count} unpublished collisions. Attempting to publish...")
 
         except Exception as e:
@@ -179,6 +182,7 @@ class Command(BaseCommand):
         publish_failures = 0
 
         for collision in collisions_to_publish:
+            
             try:
                 # --- Prepare Payload ---
                 # Ensure related objects exist before accessing attributes
@@ -201,6 +205,7 @@ class Command(BaseCommand):
                     "Bus_number": bus_route.route_id if bus_route else None, # Use the actual route identifier field
                     "comment": transit_info.comment if transit_info else None
                 }
+                
 
                 # --- Serialize Payload ---
                 try:
