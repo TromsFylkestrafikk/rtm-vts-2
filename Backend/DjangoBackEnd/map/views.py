@@ -309,11 +309,13 @@ def location_geojson(request):
     # Process each record returned by the optimized query
     for loc_data in locations_data:
 
-        collisions = DetectedCollision.objects.filter(
+        routes = DetectedCollision.objects.filter(
             transit_information_id=loc_data.get("id")
-        ).values_list("bus_route_id", flat=True)
+        ).select_related("bus_route").values_list(
+            "bus_route__route_id", flat=True
+        )
 
-        affected_routes = list(collisions)
+        affected_routes = list(routes)
         # Define base properties (common to point/line from same record)
         properties = {
             "id": loc_data.get('id'),
