@@ -16,7 +16,7 @@ import mqtt from 'mqtt'
 let client: any
 
 onMounted(() => {
-  client = mqtt.connect('ws://127.0.0.1:9001')
+  client = mqtt.connect('ws://localhost:9001/')
 
   client.on('connect', () => {
     console.log('Connected to MQTT broker')

@@ -65,6 +65,7 @@
   
 <script setup lang="ts">
   import { ref, onMounted, computed } from 'vue'
+  import mqtt from "mqtt"
   import {
     MglMap,
     MglGeoJsonSource,
@@ -87,10 +88,10 @@
 
 const emptyFC = () => ({ type: 'FeatureCollection', features: [] })
 
-//const busRoutes  = ref(emptyFC())
+const busRoutes  = ref(emptyFC())
 const incidents  = ref(emptyFC())
-//const collisions = ref(emptyFC())
-//const liveBuses  = ref(emptyFC())
+const collisions = ref(emptyFC())
+const liveBuses  = ref(emptyFC())
 
 /* ================= STYLES ================= */
 
@@ -126,6 +127,34 @@ const collisionPaint = {
 }
 
 /* ================= DATA FETCH ================= */
+const client = mqtt.connect("ws://localhost:9001")
+
+client.on("connect", () => {
+  console.log("MQTT connected")
+
+  client.subscribe("vts/collisions/#")
+})
+
+client.on("message", (topic, message) => {
+
+  const data = JSON.parse(message.toString())
+
+  console.log("MQTT message received:", topic, data)
+
+  if (topic.includes("collisions")) {
+
+    const feature = {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [data.lon, data.lat]
+      },
+      properties: data
+    }
+
+    collisions.value.features.push(feature)
+  }
+})
 
 onMounted(async () => {
   busRoutes.value = await fetchJSON('/api/busroute/')
