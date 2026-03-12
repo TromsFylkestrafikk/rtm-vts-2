@@ -308,7 +308,7 @@ def location_geojson(request):
     features = []
     # Process each record returned by the optimized query
     for loc_data in locations_data:
-
+        
         routes = DetectedCollision.objects.filter(
             transit_information_id=loc_data.get("id")
         ).select_related("bus_route").values_list(
